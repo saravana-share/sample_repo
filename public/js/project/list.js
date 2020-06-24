@@ -1,0 +1,84 @@
+$(document).ready(function() {
+    $('#project').attr('class', 'active');
+    $(document).on('click', '#project_summary', function() {
+        window.location = project_summary_url;
+    });
+
+    var cols = [
+        { 'data': "id", "name": "projects.id", "searchable": true },
+        { 'data': "project_name", "name": "projects.short_name", "searchable": true },
+        // { 'data': "completion_percentage", "name": "projects.completion_percentage", "searchable": false },
+        { 'data': "client_company_name", "name": "client_company.name", "searchable": false },
+        //{'data':"estimated_days","searchable":false},
+        //{'data':"actual_days","searchable":false},
+        { 'data': "project_status", "name": "project_statuses.name", "searchable": true },
+        { 'data': "discussion_started_date", "searchable": false },
+        { 'data': "development_started_date", "searchable": false },
+        { 'data': "next_action_by", "searchable": false },
+        { 'data': "action", "searchable": false, "class": "action" },
+    ];
+
+    /*
+    var dataTable = $('#project_data_table').dataTable({
+        "dom": dom_structure,
+        "language": {
+            "search":"",
+            "lengthMenu":     "_MENU_",
+            "paginate": { 
+                "next":       '<i class="icon ion-ios-arrow-forward"></i>',
+                "previous":   '<i class="icon ion-ios-arrow-back"></i>'
+            },
+        },
+        paging: true,
+        searching: true,
+        serverSide: true,
+        ajax: {
+        url: list_project,
+        type: "GET",
+        dataType: "json",
+            data: function (d) {
+            },
+        },
+
+        columns: cols,
+        rowCallback: function(row, data, index){
+            $(row).addClass('highlight-row');
+        },
+    });
+    */
+
+    $('body').on('click', '#delete_project', function(event) {
+        event.preventDefault();
+        $('#delete_confirmation_modal').modal("show");
+        delete_url = $(this).attr('href');
+        // alert(delete_url);
+    });
+    $('.delete-confirm').click(function() {
+        window.location = delete_url;
+    });
+
+
+    var project_table = $('#project_data_table').DataTable({
+        "language": {
+            "search": "",
+            "lengthMenu": "_MENU_",
+            "paginate": {
+                "next": '<i class="icon ion-ios-arrow-forward"></i>',
+                "previous": '<i class="icon ion-ios-arrow-back"></i>'
+            },
+        },
+        'pageLength': 10,
+        processing: true,
+        serverSide: true,
+        ordering: false,
+        method: "GET",
+        ajax: {
+            url: list_project_url,
+            data: function(d) {},
+        },
+        columns: cols,
+    });
+    $('.page-title ').html('<h4 class="title">Projects</h4>');
+    $('.sub_actions').html('<div class="dropdown"><button class="btn btn-primary btn-md" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton"><ul><li><a class="dropdown-item" id="project_summary" href="#!">Send Summary Report</a></li></ul></div></div>');
+
+});
